@@ -7,10 +7,10 @@ type Error interface {
 	Error() string
 }
 
-func NewError(code string, message string) Error {
+func NewError(code string) Error {
 	return &errorImp{
 		code:    code,
-		message: message,
+		message: errMap[code],
 	}
 }
 
