@@ -31,7 +31,7 @@ func (e *Engine) Use(middleware ...gin.HandlerFunc) {
 	e.GinEngine.Use(middleware...)
 }
 
-func GET[T any](engine Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
+func GET[T any](engine *Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
 	setup := handler()
 	engine.ModelConverter.Add(new(T))
 	engine.ModelConverter.Add(setup.Response)
@@ -39,7 +39,7 @@ func GET[T any](engine Engine, route string, handler Handler[T], middleware ...g
 	engine.GinEngine.GET(route, joinMiddlewareAndService(newGinServiceHandler(handler), middleware...)...)
 }
 
-func POST[T any](engine Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
+func POST[T any](engine *Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
 	setup := handler()
 	engine.ModelConverter.Add(new(T))
 	engine.ModelConverter.Add(setup.Response)
@@ -47,7 +47,7 @@ func POST[T any](engine Engine, route string, handler Handler[T], middleware ...
 	engine.GinEngine.POST(route, joinMiddlewareAndService(newGinServiceHandler(handler), middleware...)...)
 }
 
-func PUT[T any](engine Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
+func PUT[T any](engine *Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
 	setup := handler()
 	engine.ModelConverter.Add(new(T))
 	engine.ModelConverter.Add(setup.Response)
@@ -55,7 +55,7 @@ func PUT[T any](engine Engine, route string, handler Handler[T], middleware ...g
 	engine.GinEngine.PUT(route, joinMiddlewareAndService(newGinServiceHandler(handler), middleware...)...)
 }
 
-func DELETE[T any](engine Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
+func DELETE[T any](engine *Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
 	setup := handler()
 	engine.ModelConverter.Add(new(T))
 	engine.ModelConverter.Add(setup.Response)
@@ -63,7 +63,7 @@ func DELETE[T any](engine Engine, route string, handler Handler[T], middleware .
 	engine.GinEngine.DELETE(route, joinMiddlewareAndService(newGinServiceHandler(handler), middleware...)...)
 }
 
-func WS[T any](engine Engine, route string, handler WSHandler[T], middleware ...gin.HandlerFunc) {
+func WS[T any](engine *Engine, route string, handler WSHandler[T], middleware ...gin.HandlerFunc) {
 	engine.GinEngine.GET(route, joinMiddlewareAndService(newGinWSServiceHandler(handler), middleware...)...)
 }
 
