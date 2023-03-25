@@ -4,7 +4,6 @@ type Handler[T any] func() HandlerResponse[T]
 
 type HandlerResponse[T any] struct {
 	Route      string
-	Method     string
 	Service    Service[T]
 	Response   interface{}
 	Pagination bool
