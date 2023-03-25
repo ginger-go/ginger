@@ -2,6 +2,7 @@ package ginger
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ginger-go/ginger/typescript"
@@ -29,6 +30,24 @@ func (e *Engine) Run(addr string) error {
 
 func (e *Engine) Use(middleware ...gin.HandlerFunc) {
 	e.GinEngine.Use(middleware...)
+}
+
+func (e *Engine) GenerateTypescript() {
+	os.RemoveAll("api")
+	err := os.Mkdir("api", os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.WriteFile("api/model.ts", []byte(e.ModelConverter.ToString()), os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.WriteFile("api/api.ts", []byte(e.ApiConverter.ToString()), os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func GET[T any](engine *Engine, route string, handler Handler[T], middleware ...gin.HandlerFunc) {
