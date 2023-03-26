@@ -60,7 +60,9 @@ func Map2Model[T any](from interface{}) *T {
 				case reflect.Bool:
 					to.FieldByName(fieldName).SetBool(field.Bool())
 				case reflect.Slice, reflect.Array, reflect.Struct, reflect.Map, reflect.Ptr:
-					to.FieldByName(fieldName).Set(field)
+					if to.FieldByName(fieldName).Type() == field.Type() {
+						to.FieldByName(fieldName).Set(field)
+					}
 				}
 			}
 		}
