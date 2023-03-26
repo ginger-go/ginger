@@ -9,6 +9,7 @@ require (
 	github.com/ginger-go/sql v1.0.1
 	github.com/gorilla/websocket v1.5.0
 	github.com/iancoleman/strcase v0.2.0
+	github.com/robfig/cron v1.2.0
 	github.com/ulule/limiter/v3 v3.11.1
 	gorm.io/gorm v1.24.6
 )

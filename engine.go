@@ -8,12 +8,14 @@ import (
 	"github.com/ginger-go/ginger/typescript"
 	"github.com/ginger-go/sql"
 	"github.com/gorilla/websocket"
+	"github.com/robfig/cron"
 )
 
 type Engine struct {
 	GinEngine      *gin.Engine
 	ModelConverter *typescript.ModelConverter
 	ApiConverter   *typescript.ApiConverter
+	CronWorker     *cron.Cron
 }
 
 func NewEngine() *Engine {
@@ -21,11 +23,21 @@ func NewEngine() *Engine {
 		GinEngine:      gin.Default(),
 		ModelConverter: typescript.NewModelConverter(),
 		ApiConverter:   typescript.NewApiConverter(),
+		CronWorker:     cron.New(),
 	}
 }
 
-func (e *Engine) Run(addr string) error {
-	return e.GinEngine.Run(addr)
+func (e *Engine) Run(addr string) {
+	e.CronWorker.Start()
+	e.GinEngine.Run(addr)
+}
+
+func (e *Engine) RunServerOnly(addr string) {
+	e.GinEngine.Run(addr)
+}
+
+func (e *Engine) RunCronOnly() {
+	e.CronWorker.Start()
 }
 
 func (e *Engine) Use(middleware ...gin.HandlerFunc) {
@@ -84,6 +96,10 @@ func DELETE[T any](engine *Engine, route string, handler Handler[T], middleware 
 
 func WS[T any](engine *Engine, route string, handler WSHandler[T], middleware ...gin.HandlerFunc) {
 	engine.GinEngine.GET(route, joinMiddlewareAndService(newGinWSServiceHandler(handler), middleware...)...)
+}
+
+func Cron(engine *Engine, spec string, job func()) {
+	engine.CronWorker.AddFunc(spec, job)
 }
 
 func newGinServiceHandler[T any](handler Handler[T]) gin.HandlerFunc {
