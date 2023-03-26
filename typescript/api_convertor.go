@@ -91,7 +91,7 @@ func (c *ApiConverter) convertToGet(a Api) string {
 	if a.Request != nil {
 		name := c.nameOfModel(a.Request)
 		if len(name) > 0 {
-			output += ", req: model." + name
+			param += ", req: model." + name
 		}
 	}
 	if a.Pagination {
