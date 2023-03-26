@@ -8,6 +8,7 @@ type BaseMapper[T any] struct {
 }
 
 func (m *BaseMapper[T]) Map2Model(from interface{}) *T {
+	from = neverBePtr(from)
 	if m.BeforeMap2Model != nil {
 		from = m.BeforeMap2Model(from)
 	}
@@ -19,6 +20,7 @@ func (m *BaseMapper[T]) Map2Model(from interface{}) *T {
 }
 
 func (m *BaseMapper[T]) Map2Models(from interface{}) []T {
+	from = neverBePtr(from)
 	fromVal := reflect.ValueOf(from)
 	if fromVal.Kind() != reflect.Slice {
 		panic("from must be a slice")
@@ -31,6 +33,7 @@ func (m *BaseMapper[T]) Map2Models(from interface{}) []T {
 }
 
 func Map2Model[T any](from interface{}) *T {
+	from = neverBePtr(from)
 	to := reflect.ValueOf(new(T)).Elem()
 
 	if from == nil {
@@ -91,6 +94,7 @@ func Map2Model[T any](from interface{}) *T {
 }
 
 func Map2Models[T any](fromArray interface{}) []T {
+	fromArray = neverBePtr(fromArray)
 	fromVal := reflect.ValueOf(fromArray)
 	if fromVal.Kind() != reflect.Slice {
 		panic("from must be a slice")
@@ -107,4 +111,11 @@ func Map2Models[T any](fromArray interface{}) []T {
 		to = append(to, *t)
 	}
 	return to
+}
+
+func neverBePtr(v interface{}) interface{} {
+	if reflect.TypeOf(v).Kind() == reflect.Ptr {
+		return reflect.ValueOf(v).Elem().Interface()
+	}
+	return v
 }
