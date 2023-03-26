@@ -3,10 +3,8 @@ package ginger
 import "reflect"
 
 type BaseMapper[T any] struct {
-	BeforeMap2Model  func(from interface{}) interface{}
-	AfterMap2Model   func(from interface{}, to *T) *T
-	BeforeMap2Models func(from interface{}) interface{}
-	AfterMap2Models  func(from interface{}, to []T) []T
+	BeforeMap2Model func(from interface{}) interface{}
+	AfterMap2Model  func(from interface{}, to *T) *T
 }
 
 func (m *BaseMapper[T]) Map2Model(from interface{}) *T {
@@ -21,12 +19,13 @@ func (m *BaseMapper[T]) Map2Model(from interface{}) *T {
 }
 
 func (m *BaseMapper[T]) Map2Models(from interface{}) []T {
-	if m.BeforeMap2Models != nil {
-		from = m.BeforeMap2Models(from)
+	fromVal := reflect.ValueOf(from)
+	if fromVal.Kind() != reflect.Slice {
+		panic("from must be a slice")
 	}
-	output := Map2Models[T](from)
-	if m.AfterMap2Models != nil {
-		output = m.AfterMap2Models(from, output)
+	output := make([]T, fromVal.Len())
+	for i := 0; i < fromVal.Len(); i++ {
+		output[i] = *m.Map2Model(fromVal.Index(i).Interface())
 	}
 	return output
 }
