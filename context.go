@@ -21,10 +21,10 @@ func (ctx *Context[T]) UserAgent() string {
 	return ctx.GinContext.Request.UserAgent()
 }
 
-func (ctx *Context[T]) OK(data interface{}, page ...sql.Pagination) {
+func (ctx *Context[T]) OK(data interface{}, page ...*sql.Pagination) {
 	var p *sql.Pagination
 	if len(page) > 0 {
-		p = &page[0]
+		p = page[0]
 	}
 	resp := &Response{
 		Success:    true,

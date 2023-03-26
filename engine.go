@@ -116,7 +116,7 @@ func newGinServiceHandler[T any](handler Handler[T]) gin.HandlerFunc {
 			ctx.Error(err)
 			return
 		}
-		ctx.OK(resp, *ctx.Page)
+		ctx.OK(resp, ctx.Page)
 	}
 }
 
