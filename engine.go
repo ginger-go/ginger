@@ -103,14 +103,18 @@ func Cron(engine *Engine, spec string, job func()) {
 }
 
 func newGinServiceHandler[T any](handler Handler[T]) gin.HandlerFunc {
+	handlerSetup := handler()
 	return func(c *gin.Context) {
 		ctx := &Context[T]{
 			GinContext: c,
 			Request:    GinRequest[T](c),
-			Page:       GinRequest[sql.Pagination](c),
-			Sort:       GinRequest[sql.Sort](c),
 		}
-		handlerSetup := handler()
+		if handlerSetup.Pagination {
+			ctx.Page = GinRequest[sql.Pagination](c)
+		}
+		if handlerSetup.Sort {
+			ctx.Sort = GinRequest[sql.Sort](c)
+		}
 		resp, err := handlerSetup.Service(ctx)
 		if err != nil {
 			ctx.Error(err)
@@ -127,6 +131,7 @@ var wsUpGrader = websocket.Upgrader{
 }
 
 func newGinWSServiceHandler[T any](handler WSHandler[T]) gin.HandlerFunc {
+	handlerSetup := handler()
 	return func(c *gin.Context) {
 		ws, err := wsUpGrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
@@ -139,10 +144,7 @@ func newGinWSServiceHandler[T any](handler WSHandler[T]) gin.HandlerFunc {
 		ctx := &Context[T]{
 			GinContext: c,
 			Request:    GinRequest[T](c),
-			Page:       GinRequest[sql.Pagination](c),
-			Sort:       GinRequest[sql.Sort](c),
 		}
-		handlerSetup := handler()
 		err1 := handlerSetup.Service(ctx, ws)
 		if err != nil {
 			ctx.Error(err1)
