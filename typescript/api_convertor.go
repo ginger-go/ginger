@@ -131,7 +131,7 @@ func (c *ApiConverter) convertToGet(a Api) string {
 				output += "        [\"size\", size.toString()],\n"
 			}
 			if a.Sort {
-				output += "        [\"sortBy\", sortBy.toString()],\n"
+				output += "        [\"by\", sortBy.toString()],\n"
 				output += "        [\"asc\", asc ? \"true\" : \"false\"],\n"
 			}
 			output += "    ]"
