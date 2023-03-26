@@ -136,7 +136,7 @@ func (c *ApiConverter) convertToGet(a Api) string {
 			}
 			output += "    ]"
 		} else {
-			output += ", null"
+			output += ", undefined"
 		}
 	}
 	output += ", headers)\n"
@@ -180,7 +180,7 @@ func (c *ApiConverter) convertToNonGet(a Api, method string) string {
 	if a.Request != nil && len(c.nameOfModel(a.Request)) > 0 {
 		output += ", req"
 	} else {
-		output += ", null"
+		output += ", undefined"
 	}
 	output += ", headers)\n"
 	output += "}\n\n"
