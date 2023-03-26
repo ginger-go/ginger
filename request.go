@@ -41,7 +41,6 @@ func parseTags[T any](request T) []string {
 			value := tag.Get(key)
 			if len(value) > 0 {
 				m[key] = true
-				break
 			}
 		}
 	}
