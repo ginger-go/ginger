@@ -176,9 +176,12 @@ func (c *ApiConverter) convertToNonGet(a Api, method string) string {
 	output += ">(host, \"" + a.Route
 
 	if a.Request != nil {
-		output += ", req, headers"
+		name := c.nameOfModel(a.Request)
+		if len(name) > 0 {
+			output += ", req"
+		}
 	}
-	output += ")\n"
+	output += ", headers)\n"
 	output += "}\n\n"
 	return output
 }
