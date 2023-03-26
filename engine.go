@@ -151,7 +151,10 @@ func newGinWSServiceHandler[T any](handler WSHandler[T]) gin.HandlerFunc {
 }
 
 func joinMiddlewareAndService(service gin.HandlerFunc, middleware ...gin.HandlerFunc) []gin.HandlerFunc {
-	var funcs = []gin.HandlerFunc{service}
-	funcs = append(funcs, middleware...)
+	var funcs = make([]gin.HandlerFunc, 0)
+	if len(middleware) > 0 {
+		funcs = append(funcs, middleware...)
+	}
+	funcs = append(funcs, service)
 	return funcs
 }
