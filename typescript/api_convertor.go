@@ -135,6 +135,8 @@ func (c *ApiConverter) convertToGet(a Api) string {
 				output += "        [\"asc\", asc ? \"true\" : \"false\"],\n"
 			}
 			output += "    ]"
+		} else {
+			output += ", null"
 		}
 	}
 	output += ", headers)\n"
@@ -175,11 +177,10 @@ func (c *ApiConverter) convertToNonGet(a Api, method string) string {
 	}
 	output += ">(host, \"" + a.Route
 
-	if a.Request != nil {
-		name := c.nameOfModel(a.Request)
-		if len(name) > 0 {
-			output += ", req"
-		}
+	if a.Request != nil && len(c.nameOfModel(a.Request)) > 0 {
+		output += ", req"
+	} else {
+		output += ", null"
 	}
 	output += ", headers)\n"
 	output += "}\n\n"
