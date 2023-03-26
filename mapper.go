@@ -13,7 +13,7 @@ func (m *BaseMapper[T]) Map2Model(from interface{}) *T {
 	if m.BeforeMap2Model != nil {
 		from = m.BeforeMap2Model(from)
 	}
-	output := map2Object[T](from)
+	output := Map2Model[T](from)
 	if m.AfterMap2Model != nil {
 		output = m.AfterMap2Model(from, output)
 	}
@@ -24,14 +24,14 @@ func (m *BaseMapper[T]) Map2Models(from interface{}) []T {
 	if m.BeforeMap2Models != nil {
 		from = m.BeforeMap2Models(from)
 	}
-	output := map2Objects[T](from)
+	output := Map2Models[T](from)
 	if m.AfterMap2Models != nil {
 		output = m.AfterMap2Models(from, output)
 	}
 	return output
 }
 
-func map2Object[T any](from interface{}) *T {
+func Map2Model[T any](from interface{}) *T {
 	to := reflect.ValueOf(new(T)).Elem()
 
 	if from == nil {
@@ -89,7 +89,7 @@ func map2Object[T any](from interface{}) *T {
 	return &output
 }
 
-func map2Objects[T any](fromArray interface{}) []T {
+func Map2Models[T any](fromArray interface{}) []T {
 	fromVal := reflect.ValueOf(fromArray)
 	if fromVal.Kind() != reflect.Slice {
 		panic("from must be a slice")
@@ -102,7 +102,7 @@ func map2Objects[T any](fromArray interface{}) []T {
 
 	var to []T
 	for _, f := range from {
-		t := map2Object[T](f)
+		t := Map2Model[T](f)
 		to = append(to, *t)
 	}
 	return to
