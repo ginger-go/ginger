@@ -310,15 +310,15 @@ export const get = async <T>(host: string, url: string, params?: any[][], header
 }
 
 export const post = async <T>(host: string, url: string, body?: any, headers?: any): Promise<[Response<T> | null, number]> => {
-    return await _nonGet('POST', host + url, body, headers);
+    return await _nonGet(host, 'POST', url, body, headers);
 }
 
 export const put = async <T>(host: string, url: string, body?: any, headers?: any): Promise<[Response<T> | null, number]> => {
-    return await _nonGet('PUT', host + url, body, headers);
+    return await _nonGet(host, 'PUT', url, body, headers);
 }
 
 export const del = async <T>(host: string, url: string, body?: any, headers?: any): Promise<[Response<T> | null, number]> => {
-    return await _nonGet('DELETE', host + url, body, headers);
+    return await _nonGet(host, 'DELETE', url, body, headers);
 }
 
 export const upload = async <T>(host: string, url: string, file: File, headers?: any): Promise<[Response<T> | null, number]> => {
