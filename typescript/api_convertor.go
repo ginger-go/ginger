@@ -89,7 +89,10 @@ func (c *ApiConverter) convertToGet(a Api) string {
 
 	param := "host: string"
 	if a.Request != nil {
-		param += ", req: model." + c.nameOfModel(a.Request)
+		name := c.nameOfModel(a.Request)
+		if len(name) > 0 {
+			output += ", req: model." + name
+		}
 	}
 	if a.Pagination {
 		param += ", page: number, size: number"
@@ -152,7 +155,10 @@ func (c *ApiConverter) convertToNonGet(a Api, method string) string {
 	}
 	output := "export const " + c.nameOfFunc(a.Handler) + " = async (host: string, "
 	if a.Request != nil {
-		output += "req: model." + c.nameOfModel(a.Request) + ", "
+		name := c.nameOfModel(a.Request)
+		if len(name) > 0 {
+			output += "req: model." + name + ", "
+		}
 	}
 	output += "headers?: any): Promise<[Response<"
 	if a.Response != nil {
