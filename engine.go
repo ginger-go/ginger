@@ -44,19 +44,19 @@ func (e *Engine) Use(middleware ...gin.HandlerFunc) {
 	e.GinEngine.Use(middleware...)
 }
 
-func (e *Engine) GenerateTypescript() {
-	os.RemoveAll("api")
-	err := os.Mkdir("api", os.ModePerm)
+func (e *Engine) GenerateTypescript(folderPath string) {
+	os.RemoveAll(folderPath)
+	err := os.Mkdir(folderPath, os.ModePerm)
 	if err != nil {
 		panic(err)
 	}
 
-	err = os.WriteFile("api/model.ts", []byte(e.ModelConverter.ToString()), os.ModePerm)
+	err = os.WriteFile(folderPath+"/model.ts", []byte(e.ModelConverter.ToString()), os.ModePerm)
 	if err != nil {
 		panic(err)
 	}
 
-	err = os.WriteFile("api/api.ts", []byte(e.ApiConverter.ToString()), os.ModePerm)
+	err = os.WriteFile(folderPath+"/api.ts", []byte(e.ApiConverter.ToString()), os.ModePerm)
 	if err != nil {
 		panic(err)
 	}
