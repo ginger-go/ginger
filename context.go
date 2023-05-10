@@ -1,6 +1,7 @@
 package ginger
 
 import (
+	"math"
 	"net/http/httptest"
 
 	"github.com/gin-gonic/gin"
@@ -69,9 +70,17 @@ func (ctx *Context[T]) UserAgent() string {
 }
 
 func (ctx *Context[T]) OK(data interface{}, page ...*sql.Pagination) {
-	var p *sql.Pagination
+	var p *PaginationResponse
 	if len(page) > 0 {
-		p = page[0]
+		totalPage := int(math.Ceil(float64(page[0].Total) / float64(page[0].Size)))
+		hasNext := page[0].Page < totalPage
+		p = &PaginationResponse{
+			Page:      page[0].Page,
+			TotalPage: totalPage,
+			Size:      page[0].Size,
+			Total:     page[0].Total,
+			HasNext:   hasNext,
+		}
 	}
 	resp := &Response{
 		Success:    true,
