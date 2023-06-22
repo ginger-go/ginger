@@ -117,6 +117,16 @@ func newGinServiceHandler[T any](handler Handler[T]) gin.HandlerFunc {
 		}
 		resp, err := handlerSetup.Service(ctx)
 		if err != nil {
+			if err.Code() == ERR_CODE_UNAUTHORIZED {
+				ctx.ErrorWithStatus(401, err)
+				return
+			} else if err.Code() == ERR_CODE_FORBIDDEN {
+				ctx.ErrorWithStatus(403, err)
+				return
+			} else if err.Code() == ERR_CODE_INTERNAL_SERVER_ERROR {
+				ctx.ErrorWithStatus(500, err)
+				return
+			}
 			ctx.Error(err)
 			return
 		}

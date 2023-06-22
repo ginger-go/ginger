@@ -102,3 +102,15 @@ func (ctx *Context[T]) Error(err Error) {
 	ctx.Response = resp // for testing
 	ctx.GinContext.JSON(200, resp)
 }
+
+func (ctx *Context[T]) ErrorWithStatus(status int, err Error) {
+	resp := &Response{
+		Success: false,
+		Error: &ResponseError{
+			Code:    err.Code(),
+			Message: err.Error(),
+		},
+	}
+	ctx.Response = resp // for testing
+	ctx.GinContext.JSON(status, resp)
+}
