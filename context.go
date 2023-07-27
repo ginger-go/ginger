@@ -100,7 +100,7 @@ func (ctx *Context[T]) Error(err Error) {
 		},
 	}
 	ctx.Response = resp // for testing
-	ctx.GinContext.JSON(200, resp)
+	ctx.GinContext.JSON(400, resp)
 }
 
 func (ctx *Context[T]) ErrorWithStatus(status int, err Error) {
