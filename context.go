@@ -100,7 +100,17 @@ func (ctx *Context[T]) Error(err Error) {
 		},
 	}
 	ctx.Response = resp // for testing
-	ctx.GinContext.JSON(200, resp)
+	if err.Code() == ERR_CODE_UNAUTHORIZED {
+		ctx.GinContext.JSON(401, resp)
+		return
+	} else if err.Code() == ERR_CODE_FORBIDDEN {
+		ctx.GinContext.JSON(403, resp)
+		return
+	} else if err.Code() == ERR_CODE_INTERNAL_SERVER_ERROR {
+		ctx.GinContext.JSON(500, resp)
+		return
+	}
+	ctx.GinContext.JSON(400, resp)
 }
 
 func (ctx *Context[T]) ErrorWithStatus(status int, err Error) {

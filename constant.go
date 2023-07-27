@@ -17,3 +17,9 @@ const (
 	tag_json = "json"
 	tag_form = "form"
 )
+
+func init() {
+	RegisterError(ERR_CODE_UNAUTHORIZED, "Unauthorized")
+	RegisterError(ERR_CODE_FORBIDDEN, "Forbidden")
+	RegisterError(ERR_CODE_INTERNAL_SERVER_ERROR, "Internal Server Error")
+}
